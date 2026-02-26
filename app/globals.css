@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --bg-card-base: #1e1e1e;
+  --bg-card-hover: #2f2f2f;
+  --bg-card-active: #2f2f2f;
 }
 
 @theme inline {
@@ -23,4 +26,28 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.bg-card{
+  background-color: var(--bg-card-base);
+  transition: all 0.3s ease-in-out;
+  border-bottom: 1px solid #2f2f2f;
+}
+
+.bg-card:hover{
+  background-color: var(--bg-card-hover);
+}
+
+.bg-card:active{
+  background-color: var(--bg-card-active);
+}
+
+select {
+  background-color: #1e293b;
+  color: white;
+}
+
+select option {
+  background-color: #1e293b;
+  color: white;
 }

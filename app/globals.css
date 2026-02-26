@@ -34,10 +34,6 @@ body {
   border-bottom: 1px solid #2f2f2f;
 }
 
-.bg-card:hover{
-  background-color: var(--bg-card-hover);
-}
-
 .bg-card:active{
   background-color: var(--bg-card-active);
 }

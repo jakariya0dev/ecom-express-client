@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-export default function Products() {
+export default function Users() {
   return (
     <div className="flex-1">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">

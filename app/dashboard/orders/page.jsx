@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-export default function UserPage() {
+export default function OrderPage() {
   return (
     <div className="flex-1">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
@@ -46,17 +46,27 @@ export default function UserPage() {
           <div className="flex items-center">
             <p className="text-lg font-semibold">Product List</p>
             <select
-              name="user_filter"
-              id="user_filter"
+              name="product_filter"
+              id="product_filter"
               className="ml-4 p-2 border border-gray-100 rounded-md"
             >
-              <option value="all">All</option>
-              <option value="verified">Verified</option>
-              <option value="not_verified"></option>
-              <option value="pending">Pending</option>
-              <option value="rejected">Rejected</option>
-              <option value="suspended">Suspended</option>
-              <option value="banned">Banned</option>
+              <option className="bg-black" value="all">
+                All
+              </option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="featured">Featured</option>
+              <option value="unfeatured">Unfeatured</option>
+              <option value="best_selling">Best Selling</option>
+              <option value="most_viewed">Most Viewed</option>
+              <option value="most_rated">Most Rated</option>
+              <option value="lowest_rated">Lowest Rated</option>
+              <option value="low_stock">Low Stock</option>
+              <option value="out_of_stock">Out of Stock</option>
+              <option value="recently_added">Recently Added</option>
+              <option value="recently_updated">Recently Updated</option>
+              <option value="recently_sold">Recently Sold</option>
+              <option value="recently_deleted">Recently Deleted</option>
             </select>
           </div>
 
@@ -77,11 +87,11 @@ export default function UserPage() {
               <tr className="border-b">
                 <th className="pb-2 text-start">#</th>
                 <th className="pb-2 text-start">Name</th>
-                <th className="pb-2 text-start">Email</th>
-                <th className="pb-2 text-start">Phone</th>
-                <th className="pb-2 text-start">Total Sales</th>
-                <th className="pb-2 text-start">Total Orders</th>
-                <th className="pb-2 text-start">Status</th>
+                <th className="pb-2 text-start">Category</th>
+                <th className="pb-2 text-start">Price</th>
+                <th className="pb-2 text-start">Stock</th>
+                <th className="pb-2 text-start">Sold</th>
+                <th className="pb-2 text-start">Featured</th>
                 <th className="pb-2 text-start">Actions</th>
               </tr>
             </thead>
@@ -98,7 +108,7 @@ export default function UserPage() {
                 </td>
                 <td className="py-4">
                   <p>Product 1</p>
-                  <p className="text-sm text-gray-400">ID: 123</p>
+                  <p className="text-sm text-gray-400 italic">ID: 123</p>
                 </td>
 
                 <td className="py-4">$10</td>

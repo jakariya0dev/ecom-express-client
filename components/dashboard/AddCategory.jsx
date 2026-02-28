@@ -1,10 +1,15 @@
 "use client";
 import { useState } from "react";
-export function AddCategory() {
+import { useGetCategories } from "@/lib/api/dashboard/categoriesApi";
 
- const [name, setName] = useState("");
+export function AddCategory({categoriesData}) {
+
+  const [name, setName] = useState("");
   const [parent, setParent] = useState("");
   const [image, setImage] = useState(null);
+
+  // console.log(categoriesData);
+    
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,7 +22,6 @@ export function AddCategory() {
     // mutate(formData);
     console.log([...formData.entries()]);
     // console.log(name, parent, image);
-    
     
   };
 
@@ -38,8 +42,11 @@ export function AddCategory() {
                 <input onChange={(e) => setName(e.target.value)} value={name} type="text" className="flex-1 border border-[#2f2f2f] rounded py-2 px-4" placeholder="Category Name" />
 
                 <select onChange={(e) => setParent(e.target.value)} value={parent} className="flex-1 border border-[#2f2f2f] rounded py-2 px-4">
-                  <option value="null">Select Parent</option>
-                  <option value="none">None</option>
+                  <option value="">Select Parent</option>
+                  <option value="">None</option>
+                  {categoriesData?.categories.map((category) => (
+                    <option key={category._id} value={category.id}>{category.name}</option>
+                  ))}
                 </select>
                 <input onChange={(e) => setImage(e.target.files[0])} type="file"  className="flex-1 border border-[#2f2f2f] rounded py-2 px-4" />
                 <button className="flex-1 bg-purple-800 py-2 px-4 rounded text-white">Add Category</button>

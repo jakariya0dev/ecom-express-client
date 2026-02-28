@@ -1,28 +1,35 @@
-import React from "react";
+"use client";
+
 import StatCard from "@/components/dashboard/StatCard";
+import { useGetCategories } from "@/lib/api/dashboard/categoriesApi";
+
 import {
-  DollarSign,
   ShoppingCart,
   Users,
   ShoppingBag,
-  LucideShoppingBasket,
   ShoppingBasket,
   Search,
-  Edit,
-  Delete,
   EditIcon,
-  DeleteIcon,
-  View,
-  ViewIcon,
   EyeIcon,
   Trash,
 } from "lucide-react";
 import Image from "next/image";
 import { AddCategory } from "@/components/dashboard/AddCategory";
 
-export default function Products() {
+export default function Categories() {
+
+  const {categoriesData, isGetCategoriesLoading} = useGetCategories();
+  console.log(categoriesData);
+  
+  if (isGetCategoriesLoading) {
+    return <div>Loading...</div>;
+  }
+  
+
   return (
     <div className="flex-1">
+
+      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
         <StatCard
           name="Total Products"
@@ -42,7 +49,7 @@ export default function Products() {
         />
       </div>
 
-      <AddCategory/>
+      {/* <AddCategory categoriesData={categoriesData}/> */}
 
       <div className="bg-card">
         <div className="flex justify-between p-4">
@@ -89,114 +96,41 @@ export default function Products() {
             <thead className="mb">
               <tr className="border-b">
                 <th className="pb-2 text-start">#</th>
-                <th className="pb-2 text-start">Name</th>
-                <th className="pb-2 text-start">Category</th>
-                <th className="pb-2 text-start">Price</th>
-                <th className="pb-2 text-start">Stock</th>
-                <th className="pb-2 text-start">Sold</th>
-                <th className="pb-2 text-start">Featured</th>
+                <th className="pb-2 text-start">Category Name</th>
+                <th className="pb-2 text-start">Parent Category</th>
+                <th className="pb-2 text-start">Total Items</th>
                 <th className="pb-2 text-start">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-[#2f2f2f]">
-                <td className="py-4">
-                  <Image
-                    src="https://randomuser.me/api/portraits/thumb/men/75.jpg"
-                    alt="Product 1"
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
-                </td>
-                <td className="py-4">
-                  <p>Product 1</p>
-                  <p className="text-sm text-gray-400 italic">ID: 123</p>
-                </td>
-
-                <td className="py-4">$10</td>
-                <td className="py-4">$10</td>
-                <td className="py-4">10</td>
-                <td className="py-4">5</td>
-                <td className="py-4">Yes</td>
-                <td className="flex gap-2 py-4">
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <EditIcon size={20} />
-                  </button>
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <Trash size={20} />
-                  </button>
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <EyeIcon size={20} />
-                  </button>
-                </td>
-              </tr>
-
-              <tr className="border-b border-[#2f2f2f]">
-                <td className="py-4">
-                  <Image
-                    src="https://randomuser.me/api/portraits/thumb/men/75.jpg"
-                    alt="Product 1"
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
-                </td>
-                <td className="py-4">
-                  <p>Product 1</p>
-                  <p className="text-sm text-gray-400 italic">ID: 123</p>
-                </td>
-
-                <td className="py-4">$10</td>
-                <td className="py-4">$10</td>
-                <td className="py-4">10</td>
-                <td className="py-4">5</td>
-                <td className="py-4">Yes</td>
-                <td className="flex gap-2 py-4">
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <EditIcon size={20} />
-                  </button>
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <Trash size={20} />
-                  </button>
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <EyeIcon size={20} />
-                  </button>
-                </td>
-              </tr>
-
-              <tr className="border-b border-[#2f2f2f]">
-                <td className="py-4">
-                  <Image
-                    src="https://randomuser.me/api/portraits/thumb/men/75.jpg"
-                    alt="Product 1"
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
-                </td>
-                <td className="py-4">
-                  <p>Product 1</p>
-                  <p className="text-sm text-gray-400 italic">ID: 123</p>
-                </td>
-
-                <td className="py-4">$10</td>
-                <td className="py-4">$10</td>
-                <td className="py-4">10</td>
-                <td className="py-4">5</td>
-                <td className="py-4">Yes</td>
-                <td className="flex gap-2 py-4">
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <EditIcon size={20} />
-                  </button>
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <Trash size={20} />
-                  </button>
-                  <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                    <EyeIcon size={20} />
-                  </button>
-                </td>
-              </tr>
+              {
+                categoriesData?.categories.map((category, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="py-2 text-start">{index + 1}</td>
+                    <td className="py-2 text-start">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={category?.image.url}
+                          alt={category?.name}
+                          width={50}
+                          height={50}
+                          className="h-12 w-12 rounded-full object-cover"
+                        />
+                        <p>{category?.name}</p>
+                      </div>
+                    </td>
+                    <td className="py-2 text-start">{category.parent === null ? "None" : category.parent.name}</td>
+                    <td className="py-2 text-start">{category.product?.length}</td>
+                    <td className="py-2 text-start">
+                      <div className="flex items-center gap-2">
+                        <EditIcon size={20} />
+                        <EyeIcon size={20} />
+                        <Trash size={20} />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              }
             </tbody>
           </table>
         </div>

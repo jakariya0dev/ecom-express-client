@@ -2,19 +2,12 @@
 import React from "react";
 import StatCard from "@/components/dashboard/StatCard";
 import {
-  DollarSign,
   ShoppingCart,
   Users,
   ShoppingBag,
-  LucideShoppingBasket,
   ShoppingBasket,
   Search,
-  Edit,
-  Delete,
   EditIcon,
-  DeleteIcon,
-  View,
-  ViewIcon,
   EyeIcon,
   Trash,
 } from "lucide-react";

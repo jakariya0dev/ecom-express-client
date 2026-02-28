@@ -11,6 +11,7 @@ import {
   Info,
   Icon,
   Menu,
+  SquareMenu,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -37,6 +38,11 @@ const Links = [
     href: "/dashboard/users",
     icon: Users,
   },
+    {
+    name: "Categories",
+    href: "/dashboard/categories",
+    icon: SquareMenu,
+  },
   {
     name: "Settings",
     href: "/dashboard/settings",
@@ -50,7 +56,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`relative z-10 transition-all duration-300 ease-in-out flex shrink-0 ${isSidebarExpanded ? "w-72" : "w-20"}`}
+      className={`relative z-10 transition-all duration-300 ease-in-out flex shrink-0 ${isSidebarExpanded ? "w-72" : "w-24"}`}
     >
       <div className="h-full w-full bg-[#1e1e1e] backdrop-blur-md p-4 flex flex-col border-r border-[#2f2f2f]">
         <div className="flex justify-between">

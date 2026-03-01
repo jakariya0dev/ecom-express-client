@@ -11,9 +11,9 @@ export function proxy(request) {
     request.nextUrl.pathname.startsWith(route)
   );
 
-  if (isProtected && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // if (isProtected && !token) {
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 
   return NextResponse.next();
 }

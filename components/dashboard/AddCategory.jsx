@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { useGetCategories } from "@/lib/api/dashboard/categoriesApi";
+import { useAddCategory } from "@/lib/api/dashboard/categoriesApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function AddCategory({categoriesData}) {
 
@@ -8,9 +9,11 @@ export function AddCategory({categoriesData}) {
   const [parent, setParent] = useState("");
   const [image, setImage] = useState(null);
 
+  const queryClient = useQueryClient();
+  const { mutate, isAddCategoryLoading, isSuccess } = useAddCategory();
+
   // console.log(categoriesData);
     
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -19,9 +22,14 @@ export function AddCategory({categoriesData}) {
     formData.append("parent", parent);
     formData.append("image", image);
 
-    // mutate(formData);
-    console.log([...formData.entries()]);
-    // console.log(name, parent, image);
+    mutate(formData);
+    queryClient.invalidateQueries({ queryKey: ["categories"] });
+    
+    if(isSuccess){
+      clearForm();
+      
+    }
+
     
   };
 
@@ -49,7 +57,7 @@ export function AddCategory({categoriesData}) {
                   ))}
                 </select>
                 <input onChange={(e) => setImage(e.target.files[0])} type="file"  className="flex-1 border border-[#2f2f2f] rounded py-2 px-4" />
-                <button className="flex-1 bg-purple-800 py-2 px-4 rounded text-white">Add Category</button>
+                <button disabled={isAddCategoryLoading} className="flex-1 bg-purple-800 py-2 px-4 rounded text-white">{isAddCategoryLoading ? "Adding..." : "Add Category"}</button>
               </form>
           </div>
         </div>

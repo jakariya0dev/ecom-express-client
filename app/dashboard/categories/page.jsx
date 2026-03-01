@@ -21,17 +21,21 @@ import { AddCategory } from "@/components/dashboard/AddCategory";
 import { useState } from "react";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
 import { toast } from "react-toastify";
+import Modal from "@/components/common/Modal";
+import { UpdateCategory } from "@/components/dashboard/UpdateCategory";
 
 export default function Categories() {
   const { categoriesData, isGetCategoriesLoading } = useGetCategories();
   const deleteCategoryMutation = useDeleteCategory();
 
-  // confirm dialog state
+  // confirm delete state
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
-  
 
-  console.log(categoriesData);
+  // update state
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  // console.log(categoriesData);
 
   if (isGetCategoriesLoading) {
     return <div>Loading...</div>;
@@ -40,22 +44,27 @@ export default function Categories() {
   const handleDeleteClicked = (id) => {
     setCategoryIdToDelete(id);
     setIsConfirmDeleteOpen(true);
-    console.log(id);
+    // console.log(id);
   };
 
-const handleConfirmDelete = () => {
-  deleteCategoryMutation.mutate(categoryIdToDelete, {
-    onSettled: () => {
-      setIsConfirmDeleteOpen(false);
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.message);
-    },
-    onSuccess: (response) => {
-      toast.success(response.data?.message);
-    }
-  });
-}
+  const handleConfirmDelete = () => {
+    deleteCategoryMutation.mutate(categoryIdToDelete, {
+      onSettled: () => {
+        setIsConfirmDeleteOpen(false);
+      },
+      onError: (error) => {
+        toast.error(error.response?.data?.message);
+      },
+      onSuccess: (response) => {
+        toast.success(response.data?.message);
+      },
+    });
+  };
+
+  const handleUpdateClicked = (category) => {
+    setSelectedCategory(category);
+    // console.log(category.name);
+  };
 
   return (
     <>
@@ -143,13 +152,17 @@ const handleConfirmDelete = () => {
                     <td className="py-2 text-start">{index + 1}</td>
                     <td className="py-2 text-start">
                       <div className="flex items-center gap-2">
-                        <Image
-                          src={category?.image?.url}
-                          alt={category?.name}
-                          width={50}
-                          height={50}
-                          className="h-12 w-12 rounded-full object-cover"
-                        />
+                        {category?.image ? (
+                          <Image
+                            src={category?.image?.url}
+                            alt={category?.name}
+                            width={50}
+                            height={50}
+                            className="h-12 w-12 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="h-12 w-12 rounded-full bg-gray-200"></div>
+                        )}
                         <p>{category?.name}</p>
                       </div>
                     </td>
@@ -161,7 +174,10 @@ const handleConfirmDelete = () => {
                     </td>
                     <td className="py-2 text-start">
                       <div className="flex items-center gap-2">
-                        <button className="cursor-pointer px-4 py-2 bg-[#2f2f2f] text-white rounded-md hover:bg-gray-600 transition">
+                        <button
+                          onClick={() => handleUpdateClicked(category)}
+                          className="cursor-pointer px-4 py-2 bg-[#2f2f2f] text-white rounded-md hover:bg-gray-600 transition"
+                        >
                           <EditIcon size={24} />
                         </button>
                         <button className="cursor-pointer px-4 py-2 bg-[#2f2f2f] text-white rounded-md hover:bg-gray-600 transition">
@@ -182,6 +198,18 @@ const handleConfirmDelete = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        open={selectedCategory !== null}
+        onClose={() => setSelectedCategory(null)}
+      >
+        <UpdateCategory
+          onClose={() => setSelectedCategory(null)}
+          selectedCategory={selectedCategory}
+          categoriesData={categoriesData?.categories}
+          close={() => setSelectedCategory(null)}
+        />
+      </Modal>
 
       <ConfirmDialog
         open={isConfirmDeleteOpen}

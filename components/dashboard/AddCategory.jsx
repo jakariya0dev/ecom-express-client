@@ -46,7 +46,7 @@ export function AddCategory({categoriesData}) {
         <div>
           <p className="font-semibold text-lg mb-3">Add Category</p>
           <div className="flex">
-              <form onSubmit={handleSubmit} className="flex gap-4">
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <input onChange={(e) => setName(e.target.value)} value={name} type="text" className="flex-1 border border-[#2f2f2f] rounded py-2 px-4" placeholder="Category Name" />
 
                 <select onChange={(e) => setParent(e.target.value)} value={parent} className="flex-1 border border-[#2f2f2f] rounded py-2 px-4">

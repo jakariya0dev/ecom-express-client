@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Plus, Trash2, Upload, Package } from "lucide-react";
-import { useAddProduct } from "@/lib/api/dashboard/productsApi";
-import { useGetCategories } from "@/lib/api/dashboard/categoriesApi";
+import { useAddProduct } from "@/lib/api/admin/productsApi";
+import { useGetCategories } from "@/lib/api/admin/categoriesApi";
 
 const AddProduct = () => {
   const [preview, setPreview] = useState(null);

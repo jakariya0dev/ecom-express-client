@@ -4,7 +4,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import {
   useDeleteCategory,
   useGetCategories,
-} from "@/lib/api/dashboard/categoriesApi";
+} from "@/lib/api/admin/categoriesApi";
 
 import {
   ShoppingCart,

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useAddCategory } from "@/lib/api/dashboard/categoriesApi";
+import { useAddCategory } from "@/lib/api/admin/categoriesApi";
 import { useQueryClient } from "@tanstack/react-query";
 
 export function AddCategory({categoriesData}) {

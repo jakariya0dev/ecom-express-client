@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useParams } from "next/navigation";
-import { getProductMutation } from "@/lib/api/dashboard/productsApi";
+import { getProductMutation } from "@/lib/api/admin/productsApi";
 import { Edit3, Plus, Settings, ChevronRight, Package, Info } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -35,7 +35,7 @@ const ProductDetails = () => {
             href={`/admin/productData.data/edit/${productData.product._id}`}
             className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold transition"
           >
-            <Edit3 size={16} /> Edit productData.data
+            <Edit3 size={16} /> Edit Product
           </Link>
           <Link 
             href={`/admin/variants/add?productData.dataId=${productData.product._id}`}
@@ -52,7 +52,7 @@ const ProductDetails = () => {
           <div className="aspect-square bg-[#2f2f2f] rounded overflow-hidden">
             <Image
               width={500}
-              height={500} 
+              height={300} 
               src={productData.product.thumbnail?.url || "/placeholder.png"} 
               alt={productData.product.name} 
               className="w-full h-full object-cover"
@@ -117,12 +117,12 @@ const ProductDetails = () => {
                 <tbody className="divide-y divide-gray-50">
                   {productData.product.variants?.length > 0 ? (
                     productData.product.variants.map((variant) => (
-                      <tr key={variant._id} className="hover:bg-blue-50/30 transition">
-                        <td className="px-6 py-4 font-medium text-gray-900">
+                      <tr key={variant._id} className="hover:bg-gray-700 transition">
+                        <td className="px-6 py-4 font-medium text-gray-100">
                           {Object.values(variant.options || {}).join(" / ")}
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-blue-600">৳{variant.salePrice || variant.price}</span>
+                          <span className="font-bold text-blue-400">৳{variant.salePrice || variant.price}</span>
                           {variant.salePrice && <span className="ml-2 text-xs text-gray-400 line-through">৳{variant.price}</span>}
                         </td>
                         <td className="px-6 py-4">

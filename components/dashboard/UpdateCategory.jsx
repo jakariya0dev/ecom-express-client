@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useUpdateCategory } from "@/lib/api/dashboard/categoriesApi";
+import { useUpdateCategory } from "@/lib/api/admin/categoriesApi";
 import { toast } from "react-toastify";
 
 export function UpdateCategory({selectedCategory, categoriesData, close}) {

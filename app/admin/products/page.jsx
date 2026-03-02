@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useGetProducts } from "@/lib/api/dashboard/productsApi";
+import { useGetProducts } from "@/lib/api/admin/productsApi";
 
 export default function Products() {
   const { data, isLoading } = useGetProducts();

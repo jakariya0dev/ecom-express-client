@@ -2,16 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Trash2, Upload, Box, DollarSign, Layers } from "lucide-react";
-import { useRouter, useParams, useSearchParams } from "next/navigation"; // Added useParams
+import { useRouter, useSearchParams } from "next/navigation"; // Added useParams
 import { toast } from "react-toastify";
-import api from "@/lib/api/api"; // Assuming your axios instance is here
-import { getSingleVariantMutation, updateVariantMutation } from "@/lib/api/admin/variantApi"; // Assumed mutation hook
+import { deleteVariantImageMutation, getSingleVariantMutation, updateVariantMutation } from "@/lib/api/admin/variantApi"; // Assumed mutation hook
 
 const EditVariant = () => {
   const router = useRouter();
-  const variantId = useSearchParams().get("variantId"); // URL: /admin/variants/edit/[variantId]
+  const variantId = useSearchParams().get("variantId");
   const queryClient = useQueryClient();
   
   // Image states
@@ -22,8 +21,8 @@ const EditVariant = () => {
   const { data: variant, isLoading: isFetching } = getSingleVariantMutation(variantId);
   console.log(variant);
   
-
   const updateVariant = updateVariantMutation();
+  const deleteVariantImage = deleteVariantImageMutation();
 
   const { register, control, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -43,7 +42,7 @@ const EditVariant = () => {
     name: "attributes"
   });
 
-  // 2. Populate form when data is fetched
+  // Populate form when data is fetched
   useEffect(() => {
     if (variant) {
       reset({
@@ -100,10 +99,24 @@ const EditVariant = () => {
         queryClient.invalidateQueries(["variant", variantId]);
         queryClient.invalidateQueries(["product", response.data.product]);
         toast.success("Variant updated successfully!");
-        router.back(); // Go back to product page
+        // router.back(); // Go back to product page
       },
       onError: (err) => {
         toast.error(err.response?.data?.message || "Error updating variant");
+      }
+    });
+  };
+
+  const handleDeleteImage = (publicId) => {
+    deleteVariantImage.mutate({ variantId, publicId }, {
+      onSuccess: (data) => {
+        // Invalidate queries to refresh data
+        queryClient.invalidateQueries(["variant", variantId]);
+        queryClient.invalidateQueries(["product", data.product]);
+        toast.success(data.message);
+      },
+      onError: (err) => {
+        toast.error(err.data?.message);
       }
     });
   };
@@ -126,13 +139,15 @@ const EditVariant = () => {
               {...register("sku", { required: "SKU is required" })}
               className="w-full p-3 bg-[#1e1e1e] rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
+            {errors.sku && <span className="text-red-500 text-sm">* {errors.sku.message}</span>}
           </div>
           <div>
             <label className="block text-sm text-gray-400 mb-2">Inventory Stock</label>
             <input 
-              type="number" {...register("stock")}
+              type="number" {...register("stock", { required: "Stock is required" })}
               className="w-full p-3 bg-[#1e1e1e] rounded focus:outline-none"
             />
+            {errors.stock && <span className="text-red-500 text-sm">* {errors.stock.message}</span>}
           </div>
         </div>
 
@@ -142,11 +157,13 @@ const EditVariant = () => {
             <label className="flex items-center gap-2 text-sm text-gray-400 mb-2">
               <DollarSign size={14}/> Cost Price
             </label>
-            <input type="number" {...register("costPrice")} className="w-full p-3 bg-[#1e1e1e] rounded" />
+            <input type="number" {...register("costPrice", { required: "Cost Price is required" })} className="w-full p-3 bg-[#1e1e1e] rounded" />
+            {errors.costPrice && <span className="text-red-500 text-sm">* {errors.costPrice.message}</span>}
           </div>
           <div>
             <label className="text-sm text-gray-400 mb-2 block">Selling Price</label>
-            <input type="number" {...register("price")} className="w-full p-3 bg-[#1e1e1e] rounded" />
+            <input type="number" {...register("price", { required: "Selling Price is required" })} className="w-full p-3 bg-[#1e1e1e] rounded" />
+            {errors.price && <span className="text-red-500 text-sm">* {errors.price.message}</span>}
           </div>
           <div>
             <label className="text-sm text-gray-400 mb-2 block">Sale Price (Optional)</label>
@@ -205,10 +222,10 @@ const EditVariant = () => {
                             <img src={img.url} className="w-24 h-24 object-cover rounded bg-[#1e1e1e]" alt="variant" />
                             <button 
                                 type="button"
-                                onClick={() => removeExistingImage(img.publicId)}
-                                className="absolute top-1 right-1 bg-red-600 p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+                                onClick={() => handleDeleteImage(img.publicId)}
+                                className="absolute top-1 right-1 bg-red-600 p-1 rounded-full opacity-0 group-hover:opacity-100 hover:cursor-pointer transition"
                             >
-                                <Trash2 size={14} />
+                                <Trash2 size={18} />
                             </button>
                         </div>
                     ))}

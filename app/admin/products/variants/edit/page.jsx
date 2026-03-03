@@ -19,7 +19,7 @@ const EditVariant = () => {
 
   // Fetch Existing Variant Data
   const { data: variant, isLoading: isFetching } = getSingleVariantMutation(variantId);
-  console.log(variant);
+  // console.log(variant);
   
   const updateVariant = updateVariantMutation();
   const deleteVariantImage = deleteVariantImageMutation();
@@ -66,6 +66,7 @@ const EditVariant = () => {
     setNewImagePreviews(prev => [...prev, ...urls]);
   };
 
+  // Remove an existing image
   const removeExistingImage = (publicId) => {
     setExistingImages(prev => prev.filter(img => img.publicId !== publicId));
   };
@@ -83,9 +84,6 @@ const EditVariant = () => {
     formData.append("options", JSON.stringify(data.options));
     formData.append("attributes", JSON.stringify(data.attributes));
     
-    // --- IMAGE MANAGEMENT ---
-    // Send list of images the backend should KEEP
-    formData.append("existingImages", JSON.stringify(existingImages));
 
     // New Images
     const imageFiles = document.getElementById("new-variant-images").files;
@@ -98,8 +96,10 @@ const EditVariant = () => {
         // Invalidate queries to refresh data
         queryClient.invalidateQueries(["variant", variantId]);
         queryClient.invalidateQueries(["product", response.data.product]);
-        toast.success("Variant updated successfully!");
+        toast.success(response.data.message);
         // router.back(); // Go back to product page
+        console.log(response);
+        
       },
       onError: (err) => {
         toast.error(err.response?.data?.message || "Error updating variant");
@@ -119,6 +119,10 @@ const EditVariant = () => {
         toast.error(err.data?.message);
       }
     });
+  };
+
+  const handleRemoveNewImagePreview = (index) => {
+    setNewImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   if (isFetching) return <div className="text-gray-100 p-10 text-center">Loading Variant...</div>;
@@ -215,9 +219,9 @@ const EditVariant = () => {
         <div className="space-y-6">
             {/* Existing Images */}
             <div className="space-y-3">
-                <label className="block text-sm text-gray-400">Current Images</label>
+                <label className="block text-sm text-gray-200">Current Images</label>
                 <div className="flex flex-wrap gap-4">
-                    {existingImages.map((img) => (
+                    {existingImages.length > 0 ? existingImages.map((img) => (
                         <div key={img.publicId} className="relative group">
                             <img src={img.url} className="w-24 h-24 object-cover rounded bg-[#1e1e1e]" alt="variant" />
                             <button 
@@ -228,20 +232,31 @@ const EditVariant = () => {
                                 <Trash2 size={18} />
                             </button>
                         </div>
-                    ))}
+                    )) : (
+                        <p className="text-sm text-gray-400">No images exist for this variant found</p>
+                    )}
                 </div>
             </div>
 
             {/* New Images */}
             <div className="space-y-3">
-                <label className="block text-sm text-gray-400">Add New Images</label>
+                <label className="block text-sm text-gray-200">Add New Images</label>
                 <div className="flex flex-wrap gap-4">
                     {newImagePreviews.map((url, i) => (
-                        <img key={i} src={url} className="w-24 h-24 object-cover rounded bg-[#1e1e1e]" alt="preview" />
+                      <div key={i} className="relative group">
+                        <img src={url} className="w-24 h-24 object-cover rounded bg-[#1e1e1e]" alt="variant" />
+                        <button 
+                          type="button"
+                          onClick={() => handleRemoveNewImagePreview(i)}
+                          className="absolute top-1 right-1 bg-red-600 p-1 rounded-full opacity-0 group-hover:opacity-100 hover:cursor-pointer transition"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     ))}
                     <label className="w-24 h-24 flex flex-col items-center justify-center bg-[#1e1e1e] rounded cursor-pointer hover:bg-[#252525] border border-dashed border-gray-600">
-                        <Upload size={20} className="text-gray-500" />
-                        <span className="text-[10px] mt-1 text-gray-500">Upload</span>
+                        <Upload size={20} className="text-gray-100" />
+                        <span className="text-[10px] mt-1 text-gray-100">Upload</span>
                         <input id="new-variant-images" type="file" multiple onChange={handleImageChange} className="hidden" />
                     </label>
                 </div>
@@ -250,7 +265,7 @@ const EditVariant = () => {
 
         <div className="flex items-center gap-3 p-4 bg-[#383838] rounded">
           <input type="checkbox" {...register("isDefault")} className="w-4 h-4 rounded accent-blue-500" />
-          <label className="text-sm text-gray-300">Set as default variant</label>
+          <label className="text-sm text-gray-200">Set as default variant</label>
         </div>
 
         <button 

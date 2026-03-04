@@ -21,7 +21,6 @@ export const SWAL_PENDING_OPTIONS = {
     showConfirmButton: false,
     allowOutsideClick: false,
     allowEscapeKey: false,
-    allowEnterKey: false,
 }
 
 export const SWAL_ERROR_OPTIONS = {

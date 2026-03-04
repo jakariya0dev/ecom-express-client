@@ -7,6 +7,7 @@ import { Plus, Trash2, Upload, Box, DollarSign, Layers } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { addVariantMutation } from "@/lib/api/admin/variantApi";
+import Link from "next/link";
 
 const AddVariant = () => {
   const searchParams = useSearchParams();
@@ -80,7 +81,7 @@ const AddVariant = () => {
     <div className="max-w-4xl mx-auto p-8 bg-[#2f2f2f] text-gray-100 rounded-xl shadow-2xl">
       <div className="flex items-center gap-3 mb-8 border-b border-gray-700 pb-4">
         <Box className="text-blue-400" />
-        <h2 className="text-2xl font-bold">Add Product Variant</h2>
+        <p className="text-xl"><Link href={`/admin/products/${productId}`}>Product</Link> <span className="text-gray-400">/ Add Variant </span></p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -90,7 +91,7 @@ const AddVariant = () => {
             <label className="block text-sm text-gray-400 mb-2">SKU (Unique Code)</label>
             <input 
               {...register("sku", { required: "SKU is required" })}
-              className="w-full p-3 bg-[#1e1e1e] rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="uppercase w-full p-3 bg-[#1e1e1e] rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="IPHONE-15-BLUE-128"
             />
           </div>

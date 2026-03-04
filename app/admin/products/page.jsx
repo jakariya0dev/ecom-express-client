@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import StatCard from "@/components/admin/StatCard";
 import {
   ShoppingCart,
@@ -11,18 +11,90 @@ import {
   EyeIcon,
   Trash,
   PlusIcon,
+  ToggleLeft,
+  ToggleRight,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useGetProducts } from "@/lib/api/admin/productsApi";
+import {
+  deleteProductMutation,
+  getProductsMutation,
+  toggleFeaturedStatusMutation,
+} from "@/lib/api/common/productsApi";
+import useDebounce from "@/hooks/useDebounce";
+import Pagination from "@/components/common/Pagination";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import {
+  SWAL_CONFIRM_DELETE_OPTIONS,
+  SWAL_ERROR_OPTIONS,
+  SWAL_PENDING_OPTIONS,
+  SWAL_SUCCESS_OPTIONS,
+} from "@/data/const";
 
 export default function Products() {
-  const { data, isLoading } = useGetProducts();
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const debouncedSearch = useDebounce(search, 500);
+  const { data, isLoading } = getProductsMutation(debouncedSearch, currentPage, filter);
+  const toggleFeaturedStatus = toggleFeaturedStatusMutation();
+  const deleteProduct = deleteProductMutation();
+  const queryClient = useQueryClient();
 
+  const products = data?.data?.products || [];
 
-  console.log(data);
-  
-  if(isLoading) return <div>Loading...</div>;
+  console.log(products);
+
+  const handleProductDelete = (productId) => {
+    Swal.fire(SWAL_CONFIRM_DELETE_OPTIONS).then((result) => {
+      if (result.isConfirmed) {
+        deleteProduct.mutate(productId, {
+          onSuccess: (data) => {
+            // Invalidate queries to refresh data
+            queryClient.invalidateQueries(["products", productId]);
+            Swal.fire({
+              ...SWAL_SUCCESS_OPTIONS,
+              title: "Deleted",
+              text: data?.data?.message,
+            });
+          },
+          onError: (err) => {
+            toast.error(err.response?.data?.message);
+            console.log(err);
+          },
+        });
+      }
+    });
+  };
+
+  const handleFeaturedToggle = (productId) => {
+    toggleFeaturedStatus.mutate(productId, {
+      onSuccess: (data) => {
+        // Invalidate queries to refresh data
+        queryClient.invalidateQueries(["products", productId]);
+        // toast.success(data.message);
+        Swal.fire({
+          ...SWAL_SUCCESS_OPTIONS,
+          title: "Updated",
+          text: data?.data?.message,
+        });
+      },
+      onError: (err) => {
+        Swal.fire({...SWAL_ERROR_OPTIONS, text: err.response?.data?.message});
+        console.log(err);
+      },
+    });
+  };
+
+  if (toggleFeaturedStatus.isPending)
+    Swal.fire({ ...SWAL_PENDING_OPTIONS, title: "Updating..." });
+
+  if (deleteProductMutation.isPending)
+    Swal.fire({ ...SWAL_PENDING_OPTIONS, title: "Deleting..." });
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="flex-1">
@@ -53,7 +125,7 @@ export default function Products() {
 
           <div className="flex border border-[#2f2f2f] rounded-lg">
             <Link
-              href="/dashboard/products/create"
+              href="/admin/products/create"
               className="px-4 py-2 text-white rounded-lg bg-purple-600 flex gap-2 items-center"
             >
               <PlusIcon size={24} /> Add New Product
@@ -65,32 +137,32 @@ export default function Products() {
           <div className="flex items-center">
             <p className="text-lg">Filter By:</p>
             <select
-              name="product_filter"
-              id="product_filter"
+              onChange={(e) => setFilter(e.target.value)}
+              value={filter}
               className="ml-4 p-2 border border-gray-100 rounded-md"
             >
-              <option className="bg-black" value="all">
-                All
-              </option>
+              <option value="all">All</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
               <option value="featured">Featured</option>
-              <option value="unfeatured">Unfeatured</option>
-              <option value="best_selling">Best Selling</option>
+              <option value="not_featured">Unfeatured</option>
+              <option value="out_of_stock">Out of Stock</option>
+              {/* <option value="best_selling">Best Selling</option>
               <option value="most_viewed">Most Viewed</option>
               <option value="most_rated">Most Rated</option>
               <option value="lowest_rated">Lowest Rated</option>
               <option value="low_stock">Low Stock</option>
-              <option value="out_of_stock">Out of Stock</option>
               <option value="recently_added">Recently Added</option>
               <option value="recently_updated">Recently Updated</option>
               <option value="recently_sold">Recently Sold</option>
-              <option value="recently_deleted">Recently Deleted</option>
+              <option value="recently_deleted">Recently Deleted</option> */}
             </select>
           </div>
 
           <div className="flex border border-[#2f2f2f] rounded-lg">
             <input
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
               type="text"
               placeholder="Search here"
               className="px-4 py-2 w-full focus:outline-none"
@@ -114,47 +186,68 @@ export default function Products() {
               </tr>
             </thead>
             <tbody>
-              {data.products?.map((product, index) => {
+              {products.map((product, index) => {
                 return (
                   <tr key={product.id} className="border-b border-[#2f2f2f]">
-                    <td className="py-4 pr-2">
-                      {index + 1}
-                    </td>
+                    <td className="py-4 pr-2">{index + 1}</td>
                     <td className="py-4 flex items-center gap-2">
                       <div>
                         <Image
-                        src={product.thumbnail.url}
-                        alt="Product 1"
-                        width={50}
-                        height={50}
-                        className="rounded-full"
-                      />
+                          src={product.thumbnail.url}
+                          alt="Product 1"
+                          width={50}
+                          height={50}
+                          className="rounded-full h-10 w-10 object-cover"
+                        />
                       </div>
                       <div>
                         <p>{product.name}</p>
-                      <p className="text-sm text-gray-400 italic">Category: {product.category.name}</p>
+                        <p className="text-sm text-gray-400 italic">
+                          Category: {product?.category?.name}
+                        </p>
                       </div>
                     </td>
                     <td className="py-4">$10</td>
                     <td className="py-4">10</td>
                     <td className="py-4">5</td>
-                    <td className="py-4">Yes</td>
-                    <td className="flex gap-2 py-4">
-                      <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
-                        <EditIcon size={20} />
+                    <td className="py-4">
+                      <button
+                        disabled={toggleFeaturedStatus.isPending}
+                        onClick={() => handleFeaturedToggle(product.id)}
+                        tooltip="Toggle Featured"
+                        className="cursor-pointer"
+                      >
+                        {product.isFeatured ? (
+                          <ToggleRight size={24} className="text-green-500" />
+                        ) : (
+                          <ToggleLeft size={24} />
+                        )}
                       </button>
-                      <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
+                    </td>
+                    <td className="flex gap-2">
+                      <Link href={`/admin/products/${product.id}/edit`} className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
+                        <EditIcon size={20} />
+                      </Link>
+                      <button
+                        onClick={() => handleProductDelete(product.id)}
+                        className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300"
+                      >
                         <Trash size={20} />
                       </button>
-                      <button className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
+                      <Link href={`/admin/products/${product.id}`} className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
                         <EyeIcon size={20} />
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
+          <Pagination
+            totalPages={data?.data?.totalPages}
+            setCurrentPage={setCurrentPage}
+            currentPage={data?.data?.currentPage}
+          />
         </div>
       </div>
     </div>

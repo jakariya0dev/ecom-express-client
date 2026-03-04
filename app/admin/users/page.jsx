@@ -170,7 +170,7 @@ export default function UserPage() {
 
                     <td className="py-4">
                       <span
-                        className={`text-xs font-semibold py-1 px-3 rounded-md lowercase ${user?.status === "active" ? "bg-green-600" : "bg-red-600"}`}
+                        className={`text-sm font-semibold py-1 px-3 rounded-md lowercase ${user?.status === "active" ? "bg-green-600" : "bg-red-600"}`}
                       >
                         {user?.status}
                       </span>

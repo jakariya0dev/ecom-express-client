@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useParams } from "next/navigation";
-import { getProductMutation } from "@/lib/api/admin/productsApi";
+import { getSingleProductMutation } from "@/lib/api/common/productsApi";
 import {
   Edit3,
   Plus,
@@ -14,12 +14,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import ConfirmDialog from "@/components/common/ConfirmDialog";
 import Swal from "sweetalert2";
 import {
   SWAL_CONFIRM_DELETE_OPTIONS,
   SWAL_PENDING_OPTIONS,
-  SWAL_SUCCESS_OPTIONS,
 } from "@/data/const";
 import { deleteVariantMutation } from "@/lib/api/admin/variantApi";
 import { useQueryClient } from "@tanstack/react-query";
@@ -27,10 +25,12 @@ import { useQueryClient } from "@tanstack/react-query";
 const ProductDetails = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
-  const { data: productData, isLoading, isError } = getProductMutation(id);
+  const { data, isLoading, isError } = getSingleProductMutation(id);
   const deleteVariant = deleteVariantMutation();
 
-  console.log(productData?.product);
+  const product = data?.data?.product;
+
+  console.log(product);
   // console.log(id);
 
   const handleDeleteVariant = (variantId) => {
@@ -64,41 +64,41 @@ const ProductDetails = () => {
 
   // return null;
   if (isLoading)
-    return <div className="p-10 text-center">Loading productData.data...</div>;
+    return <div className="p-10 text-center">Loading product data...</div>;
   if (isError)
     return (
       <div className="p-10 text-center text-red-500 font-bold">
-        productData.data not found.
+        product data not found.
       </div>
     );
-    productData.product.isFeatured = true;
+    // product?.isFeatured = true;
   return (
     <>
       <div className="">
         {/* Top Breadcrumb & Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 bg-[#2f2f2f] text-gray-100 p-4 rounded shadow-sm">
-          <div className="flex items-center gap-2 text-sm text-gray-100">
+          <div className="flex items-center gap-2 text-xl text-gray-100">
             <Link
-              href="admin/productData.data"
+              href="/admin/products"
               className="hover:text-blue-600 transition"
             >
               Products
             </Link>
             <ChevronRight size={14} />
-            <span className="font-medium text-gray-300 truncate max-w-50">
-              {productData.product.name}
+            <span className=" text-gray-400 truncate max-w-50">
+              {product?.name}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             <Link
-              href={`/admin/productData.data/edit/${productData.product._id}`}
+              href={`/admin/products/${product?.id}/edit`}
               className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold transition"
             >
               <Edit3 size={16} /> Edit Product
             </Link>
             <Link
-              href={`/admin/variants/add?productData.dataId=${productData.product._id}`}
+              href={`/admin/products/variants/create?productId=${product?.id}`}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition shadow"
             >
               <Plus size={16} /> Add Variant
@@ -112,26 +112,26 @@ const ProductDetails = () => {
             <div className="bg-[#2f2f2f] p-4 rounded">
               <div className="flex items-center gap-2 mb-2">
                 <span className="px-2 py-0.5 text-blue-800 bg-blue-100 text-[10px] font-semibold uppercase rounded tracking-wider">
-                  Brand: {productData.product.brand}
+                  Brand: {product?.brand}
                 </span>
-                {productData.product.isFeatured && (
+                {product?.isFeatured && (
                   <span className="px-2 py-0.5 bg-amber-200 text-amber-800 text-[10px] font-bold uppercase rounded tracking-wider">
                     Featured
                   </span>
                 )}
               </div>
               <h1 className="text-3xl font-extrabold text-gray-100 mb-1">
-                {productData.product.name}
+                {product?.name}
               </h1>
-              <p className="mb-4 text-sm italic">Category: {productData.product.category.name}</p>
+              <p className="mb-4 text-sm italic">Category: {product?.category.name}</p>
               <p className="text-gray-200 leading-relaxed mb-6">
-                {productData.product.shortDescription}
+                {product?.shortDescription}
               </p>
 
               <div className="flex gap-2 flex-wrap">
                 {" "}
                 Tags:
-                {productData.product.tags?.map((tag, i) => (
+                {product?.tags?.map((tag, i) => (
                   <span
                     key={i}
                     className="px-3 py-1 bg-gray-50 text-gray-600 rounded-full text-xs"
@@ -160,8 +160,8 @@ const ProductDetails = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50">
-                    {productData.product.variants?.length > 0 ? (
-                      productData.product.variants.map((variant) => (
+                    {product?.variants?.length > 0 ? (
+                      product?.variants.map((variant) => (
                         <tr
                           key={variant._id}
                           className="hover:bg-gray-700 transition"
@@ -232,8 +232,8 @@ const ProductDetails = () => {
               <Image
                 width={500}
                 height={300}
-                src={productData.product.thumbnail?.url || "/placeholder.png"}
-                alt={productData.product.name}
+                src={product?.thumbnail?.url || "/placeholder.png"}
+                alt={product?.name}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -243,7 +243,7 @@ const ProductDetails = () => {
                 <Settings size={16} className="text-blue-100" /> Specifications
               </h3>
               <div className="space-y-4">
-                {productData.product.attributes?.map((attr, i) => (
+                {product?.attributes?.map((attr, i) => (
                   <div
                     key={i}
                     className="flex justify-between text-sm border-b border-gray-50 pb-2"

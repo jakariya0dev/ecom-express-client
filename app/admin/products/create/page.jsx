@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Plus, Trash2, Upload, Package } from "lucide-react";
-import { useAddProduct } from "@/lib/api/admin/productsApi";
+import { useAddProduct } from "@/lib/api/common/productsApi";
 import { useGetCategories } from "@/lib/api/admin/categoriesApi";
+import Link from "next/link";
 
 const AddProduct = () => {
   const [preview, setPreview] = useState(null);
@@ -75,7 +76,9 @@ const AddProduct = () => {
         <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
           <Package size={24} />
         </div>
-        <h2 className="text-2xl font-bold text-gray-200">Create New Product</h2>
+        <h2 className="text-2xl font-bold text-gray-200">
+          <Link href="/admin/products">Products</Link> <span className="text-gray-400">/</span> Create
+        </h2>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

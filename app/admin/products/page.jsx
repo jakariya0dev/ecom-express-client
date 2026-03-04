@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import StatCard from "@/components/dashboard/StatCard";
+import StatCard from "@/components/admin/StatCard";
 import {
   ShoppingCart,
   Users,
@@ -114,7 +114,7 @@ export default function Products() {
               </tr>
             </thead>
             <tbody>
-              {data.products.map((product, index) => {
+              {data.products?.map((product, index) => {
                 return (
                   <tr key={product.id} className="border-b border-[#2f2f2f]">
                     <td className="py-4 pr-2">

@@ -128,7 +128,7 @@ const EditVariant = () => {
   if (isFetching) return <div className="text-gray-100 p-10 text-center">Loading Variant...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-[#2f2f2f] text-gray-100 rounded-xl shadow-2xl">
+    <div className="p-4 md:p-8 bg-[#2f2f2f] text-gray-100 rounded shadow-2xl">
       <div className="flex items-center gap-3 mb-8 border-b border-gray-700 pb-4">
         <Box className="text-blue-400" />
         <h2 className="text-2xl font-bold">Edit Variant: {variant?.sku}</h2>

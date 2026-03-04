@@ -30,3 +30,6 @@ export const SWAL_ERROR_OPTIONS = {
     showConfirmButton: false,
     timer: 1500
 }
+
+// ----------------
+export const CURRENCY_SYMBOL = '$';

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import StatCard from "@/components/dashboard/StatCard";
+import StatCard from "@/components/admin/StatCard";
 import { DollarSign, ShoppingCart, Users, ShoppingBag } from "lucide-react";
 import {
   LineChart,

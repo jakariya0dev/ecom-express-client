@@ -20,32 +20,32 @@ import { useState } from "react";
 const Links = [
   {
     name: "Home",
-    href: "/dashboard",
+    href: "/admin",
     icon: House,
   },
   {
     name: "Orders",
-    href: "/dashboard/orders",
+    href: "/admin/orders",
     icon: ShoppingCart,
   },
   {
     name: "Products",
-    href: "/dashboard/products",
+    href: "/admin/products",
     icon: ShoppingBag,
   },
   {
     name: "Users",
-    href: "/dashboard/users",
+    href: "/admin/users",
     icon: Users,
   },
     {
     name: "Categories",
-    href: "/dashboard/categories",
+    href: "/admin/categories",
     icon: SquareMenu,
   },
   {
     name: "Settings",
-    href: "/dashboard/settings",
+    href: "/admin/settings",
     icon: Settings,
   },
 ];

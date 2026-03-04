@@ -1,6 +1,6 @@
 "use client";
 
-import StatCard from "@/components/dashboard/StatCard";
+import StatCard from "@/components/admin/StatCard";
 import {
   useDeleteCategory,
   useGetCategories,
@@ -17,12 +17,12 @@ import {
   Trash,
 } from "lucide-react";
 import Image from "next/image";
-import { AddCategory } from "@/components/dashboard/AddCategory";
+import { AddCategory } from "@/components/admin/AddCategory";
 import { useState } from "react";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
 import { toast } from "react-toastify";
 import Modal from "@/components/common/Modal";
-import { UpdateCategory } from "@/components/dashboard/UpdateCategory";
+import { UpdateCategory } from "@/components/admin/UpdateCategory";
 
 export default function Categories() {
   const { categoriesData, isGetCategoriesLoading } = useGetCategories();
@@ -179,9 +179,6 @@ export default function Categories() {
                           className="cursor-pointer px-4 py-2 bg-[#2f2f2f] text-white rounded-md hover:bg-gray-600 transition"
                         >
                           <EditIcon size={24} />
-                        </button>
-                        <button className="cursor-pointer px-4 py-2 bg-[#2f2f2f] text-white rounded-md hover:bg-gray-600 transition">
-                          <EyeIcon size={24} />
                         </button>
                         <button
                           onClick={() => handleDeleteClicked(category.id)}

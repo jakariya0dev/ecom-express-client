@@ -19,14 +19,20 @@ import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
+import Pagination from "@/components/common/Pagination";
 
 export default function UserPage() {
+  const [currentPage, setCurrentPage] = useState(1);
   const [filterValue, setFilterValue] = useState("all");
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearchValue = useDebounce(searchValue, 500);
   const queryClient = useQueryClient();
   const changeUserStatus = changeUserStatusMutation();
-  const { data, isLoading } = getUsersMutation(filterValue, debouncedSearchValue);
+  const { data, isLoading } = getUsersMutation(
+    filterValue,
+    debouncedSearchValue,
+    currentPage
+  );
   const usersData = data?.data?.data;
 
   // console.log(usersData);
@@ -47,7 +53,6 @@ export default function UserPage() {
       },
     );
   };
-
 
   if (isLoading) return <div>Loading...</div>;
   return (
@@ -91,20 +96,16 @@ export default function UserPage() {
           </div>
 
           <div className="flex border border-[#2f2f2f] rounded-lg">
-            
-              <input
-                type="text"
-                onChange={(e) => setSearchValue(e.target.value)}
-                value={searchValue}
-                placeholder="Search here"
-                className="px-4 py-2 w-full focus:outline-none"
-              />
-              <button
-                className="p-4 rounded-lg bg-[#2f2f2f] hover:cursor-pointer hover:bg-[#555454]"
-              >
-                <Search size={20} />
-              </button>
-            
+            <input
+              type="text"
+              onChange={(e) => setSearchValue(e.target.value)}
+              value={searchValue}
+              placeholder="Search here"
+              className="px-4 py-2 w-full focus:outline-none"
+            />
+            <button className="p-4 rounded-lg bg-[#2f2f2f]">
+              <Search size={20} />
+            </button>
           </div>
         </div>
         <div className="p-5 w-full overflow-x-auto">
@@ -192,6 +193,16 @@ export default function UserPage() {
                 ))}
             </tbody>
           </table>
+
+          {/* pagination */}
+          <div className="flex justify-end mt-4">
+            <Pagination
+              currentPage={data?.data?.currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={data?.data?.totalPages}
+            />
+          </div>
+
         </div>
       </div>
     </div>

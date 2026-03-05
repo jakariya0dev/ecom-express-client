@@ -21,6 +21,7 @@ import {
 } from "@/data/const";
 import { deleteVariantMutation } from "@/lib/api/admin/variantApi";
 import { useQueryClient } from "@tanstack/react-query";
+import BackButton from "@/components/admin/BackButton";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -86,7 +87,7 @@ const ProductDetails = () => {
             </Link>
             <ChevronRight size={14} />
             <span className=" text-gray-400 truncate max-w-50">
-              {product?.name}
+              Details
             </span>
           </div>
 
@@ -103,6 +104,7 @@ const ProductDetails = () => {
             >
               <Plus size={16} /> Add Variant
             </Link>
+            <BackButton />
           </div>
         </div>
 

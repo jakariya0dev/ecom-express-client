@@ -11,6 +11,7 @@ import { useGetCategories } from "@/lib/api/admin/categoriesApi";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
+import BackButton from "@/components/admin/BackButton";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -112,19 +113,14 @@ const EditProduct = () => {
           <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
             <Package size={24} />
           </div>
-          <h2 className="text-2xl font-bold text-gray-200">
+          <p className="text-xl font-semibold text-gray-200">
             <Link href="/admin/products" className="hover:text-blue-400">
               Products
             </Link>
-            <span className="text-gray-400 mx-2">/</span> Edit
-          </h2>
+            <span className="text-gray-400 mx-2">/ Edit</span> 
+          </p>
         </div>
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-sm text-gray-400 hover:text-white"
-        >
-          <ArrowLeft size={16} /> Back
-        </button>
+        <BackButton />
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

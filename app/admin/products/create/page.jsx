@@ -175,7 +175,7 @@ const AddProduct = () => {
           <textarea
             {...register("shortDescription", { required: true })}
             rows="2"
-            className="w-full p-2.5 bg-gray-500 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            className="w-full p-2.5 border border-gray-600 rounded-lg focus:ring-1 focus:ring-blue-500 outline-none"
           />
           {errors.shortDescription && <p className="text-red-500 mt-1">Short Description is required</p>}
         </div>

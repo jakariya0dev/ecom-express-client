@@ -13,6 +13,7 @@ import {
   PlusIcon,
   ToggleLeft,
   ToggleRight,
+  ChevronRight,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,7 +39,11 @@ export default function Products() {
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const debouncedSearch = useDebounce(search, 500);
-  const { data, isLoading } = getProductsMutation(debouncedSearch, currentPage, filter);
+  const { data, isLoading } = getProductsMutation(
+    debouncedSearch,
+    currentPage,
+    filter,
+  );
   const toggleFeaturedStatus = toggleFeaturedStatusMutation();
   const deleteProduct = deleteProductMutation();
   const queryClient = useQueryClient();
@@ -82,7 +87,7 @@ export default function Products() {
         });
       },
       onError: (err) => {
-        Swal.fire({...SWAL_ERROR_OPTIONS, text: err.response?.data?.message});
+        Swal.fire({ ...SWAL_ERROR_OPTIONS, text: err.response?.data?.message });
         console.log(err);
       },
     });
@@ -119,8 +124,10 @@ export default function Products() {
 
       <div className="bg-card">
         <div className="flex justify-between p-4">
-          <div className="flex items-center">
-            <p className="text-xl font-semibold">Product List</p>
+          <div className="flex items-center text-xl font-semibold">
+            <Link href="/admin">Dashboard</Link>
+            <ChevronRight size={20} />
+            <p className="text-gray-400">Product List</p>
           </div>
 
           <div className="flex border border-[#2f2f2f] rounded-lg">
@@ -225,7 +232,10 @@ export default function Products() {
                       </button>
                     </td>
                     <td className="flex gap-2">
-                      <Link href={`/admin/products/${product.id}/edit`} className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
+                      <Link
+                        href={`/admin/products/${product.id}/edit`}
+                        className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300"
+                      >
                         <EditIcon size={20} />
                       </Link>
                       <button
@@ -234,7 +244,10 @@ export default function Products() {
                       >
                         <Trash size={20} />
                       </button>
-                      <Link href={`/admin/products/${product.id}`} className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300">
+                      <Link
+                        href={`/admin/products/${product.id}`}
+                        className="px-4 py-2 bg-[#2f2f2f] text-gray-100 rounded-md cursor-pointer hover:bg-gray-500 transition-all duration-300"
+                      >
                         <EyeIcon size={20} />
                       </Link>
                     </td>
